@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package gossip;
+
+message GossipEnvelope {
+  uint64 msg_id = 1;
+  uint64 sender_id = 2;
+  bytes payload = 3;
+}

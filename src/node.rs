@@ -32,7 +32,7 @@ impl Node {
         let socket = Arc::new(UdpSocket::bind(bind_addr).await?);
         let peer_addrs: Vec<SocketAddr> = peers.iter().map(|p| p.parse().unwrap()).collect();
 
-        println!("Node {} listening on {}", id, bind_addr);
+        //println!("Node {} listening on {}", id, bind_addr);
 
         Ok(Self {
             id,
@@ -117,7 +117,7 @@ impl Node {
                         drop(seen_guard);
 
                         // Log and Re-gossip
-                        println!("RECV {} FROM {} SIZE {}", msg.msg_id, msg.sender_id, msg.payload.len());
+                        //println!("RECV {} FROM {} SIZE {}", msg.msg_id, msg.sender_id, msg.payload.len());
 
                         let mut rng = SmallRng::from_os_rng();
                         let targets: Vec<_> = peers.choose_multiple(&mut rng, 3).collect();

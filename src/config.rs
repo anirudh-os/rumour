@@ -8,7 +8,7 @@ pub struct Args {
     #[arg(long)]
     pub bind: String,
 
-    #[arg(long)]
+    #[arg(long, num_args = 0..)]
     pub peers: Vec<String>,
 
     #[arg(long, default_value = "3")]

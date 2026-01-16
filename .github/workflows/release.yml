@@ -20,14 +20,26 @@ jobs:
           - os: ubuntu-latest
             target: x86_64-unknown-linux-gnu
             binary: rumour
+            archive_name: rumour-linux-x86_64.tar.gz
+            asset_content_type: application/gzip
 
           - os: macos-latest
             target: x86_64-apple-darwin
             binary: rumour
+            archive_name: rumour-macos-x86_64.tar.gz
+            asset_content_type: application/gzip
+
+          - os: macos-latest
+            target: aarch64-apple-darwin
+            binary: rumour
+            archive_name: rumour-macos-aarch64.tar.gz
+            asset_content_type: application/gzip
 
           - os: windows-latest
             target: x86_64-pc-windows-msvc
             binary: rumour.exe
+            archive_name: rumour-windows-x86_64.zip
+            asset_content_type: application/zip
 
     steps:
       - uses: actions/checkout@v4
@@ -52,8 +64,24 @@ jobs:
       - name: Build
         run: cargo build --release --target ${{ matrix.target }}
 
+      - name: Package (Unix)
+        if: matrix.os != 'windows-latest'
+        run: |
+          cd target/${{ matrix.target }}/release
+          tar -czf ../../../${{ matrix.archive_name }} ${{ matrix.binary }}
+          cd -
+
+      - name: Package (Windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          cd target/${{ matrix.target }}/release
+          7z a -tzip ../../../${{ matrix.archive_name }} ${{ matrix.binary }}
+          cd ..
+          cd ..
+          cd ..
+
       - name: Upload binary to GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          files: target/${{ matrix.target }}/release/${{ matrix.binary }}
+          files: ${{ matrix.archive_name }}
           generate_release_notes: true

@@ -116,8 +116,9 @@ impl Node {
                         seen_guard.insert(msg.msg_id, now);
                         drop(seen_guard);
 
-                        // Log and Re-gossip
-                        //println!("RECV {} FROM {} SIZE {}", msg.msg_id, msg.sender_id, msg.payload.len());
+                        if let Ok(str) = String::from_utf8(msg.payload.clone()) {
+                            println!("{}", str);
+                        }
 
                         let mut rng = SmallRng::from_os_rng();
                         let targets: Vec<_> = peers.choose_multiple(&mut rng, 3).collect();

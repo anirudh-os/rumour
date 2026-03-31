@@ -1,16 +1,36 @@
-use clap::Parser;
+use clap::{Parser, Subcommand};
 
-#[derive(Parser, Debug)]
-pub struct Args {
-    #[arg(long)]
-    pub id: u64,
+#[derive(Parser)]
+#[command(name = "rumour")]
+pub struct Cli {
+    #[command(subcommand)]
+    pub command: Command,
+}
 
-    #[arg(long)]
-    pub bind: String,
+#[derive(Subcommand)]
+pub enum Command {
+    /// Generate a new node keypair
+    Keygen {
+        /// Where to save the private key
+        #[arg(long)]
+        output: String,
+    },
+    /// Run a gossip node
+    Node {
+        /// Bind address (e.g., 127.0.0.1:9001)
+        #[arg(long)]
+        bind: String,
 
-    #[arg(long, num_args = 0..)]
-    pub peers: Vec<String>,
+        /// Peer addresses to connect to (e.g., 127.0.0.1:9002 127.0.0.1:9003)
+        #[arg(long, num_args = 0..)]
+        peers: Vec<String>,
 
-    #[arg(long, default_value = "3")]
-    pub fanout: usize,
+        /// Number of peers to relay to per message (default 3)
+        #[arg(long, default_value = "3")]
+        fanout: usize,
+
+        /// Path to private key file
+        #[arg(long)]
+        key_file: String,
+    },
 }

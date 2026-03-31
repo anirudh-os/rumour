@@ -6,4 +6,6 @@ message GossipEnvelope {
   uint64 msg_id = 1;
   uint64 sender_id = 2;
   bytes payload = 3;
+  bytes signature = 4;
+  bytes sender_public_key = 5;
 }

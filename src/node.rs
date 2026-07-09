@@ -198,6 +198,15 @@ impl Node {
 
                         // All checks passed - deliver locally
                         if let Ok(text) = String::from_utf8(msg.payload) {
+                            if let Ok(mut json) = serde_json::from_str::<serde_json::Value>(&text) {
+                                if let Some(obj) = json.as_object_mut() {
+                                    obj.insert("_sender_id".to_string(), serde_json::json!(msg.sender_id));
+                                    if let Ok(new_text) = serde_json::to_string(&json) {
+                                        println!("{}", new_text);
+                                        continue;
+                                    }
+                                }
+                            }
                             println!("{}", text);
                         }
 
